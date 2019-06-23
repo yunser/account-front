@@ -1,0 +1,87 @@
+<template>
+    <ui-admin-page name="app" :page="{title: '店铺详情'}">
+        <ul class="" v-if="shop">
+            <div>{{ shop.name }}</div>
+            <div>{{ shop.description }}</div>
+        </ul>
+        <hr>
+        <div>商品列表</div>
+        <ul>
+            <li v-for="goods in goodses">
+                <router-link :to="'/admin/goodses/' + goods.id">{{ goods.name }}</router-link>
+                <hr>
+            </li>
+        </ul>
+    </ui-admin-page>
+</template>
+
+<script>
+    export default {
+        data () {
+            return {
+                title: '店铺详情',
+                shop: null,
+                goodses: []
+            }
+        },
+        mounted() {
+            this.init()
+        },
+        methods: {
+            init() {
+                let shopId = this.$route.params.id
+                this.$http.get(`/shops/${shopId}`)
+                    .then(response => {
+                        let data = response.data
+                        this.shop = data
+                    },
+                    response => {
+                        console.log(response)
+                    })
+                this.$http.get(`/shops/${shopId}/goodses`)
+                    .then(response => {
+                            let data = response.data
+                            this.goodses = data
+                        },
+                        response => {
+                            console.log(response)
+                        })
+            },
+            remove(address) {
+                this.$http.delete(`/addresses/${address.id}`)
+                    .then(response => {
+                        let data = response.data
+                        console.log(data)
+                        if (data.code === 0) {
+                            // TODO
+                            this.init()
+                        }
+                    },
+                    response => {
+                        console.log(response)
+                    })
+            },
+            edit(address) {
+                this.$router.push(`/addresses/${address.id}/edit`)
+            },
+            add() {
+                this.$router.push('/addresses/add')
+            },
+            setDefault(address) {
+
+            }
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .address-list {
+        .item {
+
+        }
+        .footer {
+
+        }
+
+    }
+</style>
