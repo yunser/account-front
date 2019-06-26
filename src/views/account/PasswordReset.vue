@@ -33,11 +33,17 @@
             },
             find() {
                 if (!this.email) {
-                    alert('请输入邮箱')
+                    this.$message({
+                        type: 'danger',
+                        text: '两次请输入邮箱密码输入不一致'
+                    })
                     return
                 }
                 if (!/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(this.email)) {
-                    alert('邮箱输入不正确')
+                    this.$message({
+                        type: 'danger',
+                        text: '邮箱输入不正确'
+                    })
                     return
                 }
                 if (!this.password) {
@@ -47,7 +53,13 @@
                     })
                     return
                 }
-                // TODO
+                if (!this.passwordConfirm) {
+                    this.$message({
+                        type: 'danger',
+                        text: '请输入确认密码'
+                    })
+                    return
+                }
                 if (this.passwordConfirm !== this.password) {
                     this.$message({
                         type: 'danger',

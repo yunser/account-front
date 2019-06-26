@@ -1,50 +1,83 @@
 <template>
-    <div class="page page-home">
-        <header class="page-header">
-            <ui-appbar title="邮箱验证">
-                <ui-icon-button icon="arrow_back_ios" slot="left" @click="$router.go(-1)" />
-            </ui-appbar>
-        </header>
-        <main class="page-body">
-            <ui-content-block>
-                正在验证，请稍后...
-            </ui-content-block>
-        </main>
-    </div>
+    <my-page title="邮箱验证" backable>
+        <div class="common-container container">
+            <div class="page-simple-box">
+                <div>
+                    <ui-text-field v-model="email" label="邮箱" disabled />
+                </div>
+                <div>
+                    <ui-text-field v-model="code" label="验证码" />
+                    <button type="button" @click="sendCode">发送验证码</button>
+                </div>
+                <br>
+                <br>
+                <ui-raised-button label="验证" primary @click="valid"/>
+            </div>
+        </div>
+    </my-page>
 </template>
 
 <script>
     export default {
         data () {
             return {
+                email: '',
+                code: '',
             }
         },
         mounted() {
-            this.valid()
+            this.email = this.$route.query.email
+            // this.valid()
         },
         methods: {
-            valid() {
-                let code = this.$route.query.code
-                let email = this.$route.query.email
-                if (!email || !code) {
-                    alert('链接错误，请重新找回密码')
-                    return
-                }
-                this.$http.get(`/email/valid?email=${email}&code=${code}`)
+            sendCode() {
+                this.$http.get(`/send_valid_code?email=${this.email}`)
                     .then(response => {
                         let data = response.data
-                        this.$storage.set('user', data.user)
-                        this.$storage.set('accessToken', data.accessToken)
-                        alert('邮箱验证成功，点击确定快速登录')
-                        this.$router.push('/')
+                        this.$message({
+                            type: 'success',
+                            text: '已发送验证码到邮箱'
+                        })
                     },
                     response => {
                         console.log(response)
+                    })
+            },
+            valid() {
+                if (!this.email) {
+                    this.$message({
+                        type: 'danger',
+                        text: '请输入邮箱'
+                    })
+                    return
+                }
+                if (!this.code) {
+                    this.$message({
+                        type: 'danger',
+                        text: '请输入验证码'
+                    })
+                    return
+                }
+                this.$http.get(`/email/valid?email=${this.email}&code=${this.code}`)
+                    .then(response => {
+                        let data = response.data
+                        // alert('邮箱验证成功，点击确定快速登录')
+                        this.$router.go(-1)
+                    },
+                    response => {
+                        console.log(response)
+                        this.$message({
+                            type: 'danger',
+                            text: response.msg
+                        })
                     })
             }
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.page-simple-box {
+    max-width: 320px;
+}
 </style>

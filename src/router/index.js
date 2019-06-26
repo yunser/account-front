@@ -94,7 +94,7 @@ const AvatarEdit = resolve => require(['VIEW/account/AvatarEdit'], resolve)
 // const Secure = resolve => require(['VIEW/account/Secure'], resolve)
 
 // const GitHub = resolve => require(['VIEW/GitHub'], resolve)
-// const EmailValid = resolve => require(['VIEW/account/EmailValid'], resolve)
+const EmailValid = resolve => require(['VIEW/account/EmailValid'], resolve)
 const PasswordFind = resolve => require(['VIEW/account/PasswordFind'], resolve)
 const PasswordUpdate = resolve => require(['VIEW/account/PasswordUpdate'], resolve)
 const PasswordReset = resolve => require(['VIEW/account/PasswordReset'], resolve)
@@ -117,10 +117,10 @@ let routes = [
     //     path: '/count',
     //     component: Count
     // },
-    // {
-    //     path: '/email/valid',
-    //     component: EmailValid
-    // },
+    {
+        path: '/email/valid',
+        component: EmailValid
+    },
     {
         path: '/password/find',
         component: PasswordFind

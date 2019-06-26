@@ -10,7 +10,11 @@
                 
                 <div>
                     邮箱：{{ user.email || '--' }}
-                    <span v-if="!user.isEmailValid">（未验证）</span>
+                    <div v-if="user.email">
+                        <span v-if="!user.isEmailValid">（未验证，去 <router-link :to="`/email/valid?email=${user.email}`">验证</router-link>）</span>
+                        <span v-else>（已验证）</span>
+                    </div>
+                    
 
                 </div>
                 <div>手机号：{{ user.phone || '--' }}</div>
